@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fortune Teller</title>
+    <style>
+        /* General styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        select, input[type="number"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 16px;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #fortuneResult {
+            margin-top: 20px;
+            padding: 12px;
+            font-size: 18px;
+            color: #333;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fortune Teller</h1>
+        <form id="fortuneForm">
+            <label for="month">Month:</label>
+            <select id="month" name="month">
+                <option value="1">January</option>
+                <option value="2">February</option>
+                <option value="3">March</option>
+                <option value="4">April</option>
+                <option value="5">May</option>
+                <option value="6">June</option>
+                <option value="7">July</option>
+                <option value="8">August</option>
+                <option value="9">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+            </select>
+            <label for="day">Day:</label>
+            <input type="number" id="day" name="day" min="1" max="31">
+            <button type="submit">Reveal Fortune</button>
+        </form>
+        <div id="fortuneResult"></div>
+    </div>
+
+    <script>
+        const fortuneForm = document.getElementById("fortuneForm");
+        const fortuneResult = document.getElementById("fortuneResult");
+
+        fortuneForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+
+            const month = parseInt(document.getElementById("month").value);
+            const day = parseInt(document.getElementById("day").value);
+
+            if (isNaN(month) || isNaN(day) || month < 1 || month > 12 || day < 1 || day > 31) {
+                alert("Please enter valid month and day values.");
+                return;
+            }
+
+            const userDate = { month, day };
+
+            fetch("/fortune", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(userDate)
+            })
+            .then(response => response.json())
+            .then(data => {
+                fortuneResult.innerHTML = `
+                    <h2>Your Zodiac Sign: ${data.zodiacSign}</h2>
+                    <p>Your Fortune: ${data.fortuneMessage}</p>
+                `;
+            })
+            .catch(error => {
+                console.error(error);
+                fortuneResult.innerHTML = "Error fetching fortune.";
+            });
+        });
+    </script>
+</body>
+</html>

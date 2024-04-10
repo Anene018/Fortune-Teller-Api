@@ -1,5 +1,8 @@
 package com.fortune.fortune.Controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,10 +34,14 @@ public class FortuneController {
 
         String zodiacSign = fortuneService.getZodiacSign(month, date);
         String fortuneMessage = fortuneMessageService.getFortuneMessage(zodiacSign);
-        String jsonResponse = String.format("{\"zodiacSign\": \"%s\",  \"%n%s\"}", zodiacSign,
-                fortuneMessage);
 
-        return ResponseEntity.ok(jsonResponse);
+        // Construct the JSON response using a Map
+        Map<String, Object> responseData = new HashMap<>();
+        responseData.put("zodiacSign", zodiacSign);
+        responseData.put("fortuneMessage", fortuneMessage);
+
+        // Return the JSON response
+        return ResponseEntity.ok(responseData);
     }
 
     @GetMapping("/zodiac-message/{zodiacSign}")
