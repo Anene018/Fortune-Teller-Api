@@ -3,8 +3,11 @@ package com.fortune.fortune.utils;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.fortune.fortune.Exceptions.InvalidZodiacSignException;
 
+@Service
 public class ZodiacSignValidator {
 
     private static final List<String> VALID_ZODIAC_SIGNS = Arrays.asList(
